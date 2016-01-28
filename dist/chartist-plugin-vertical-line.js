@@ -1,12 +1,12 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
+    // AMD. Register as an anonymous module unless amdModuleId is set
     define([], function () {
-      return (root.returnExportsGlobal = factory());
+      return (root['Chartist.plugins.verticalLine'] = factory());
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like enviroments that support module.exports,
+    // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory();
   } else {
@@ -14,85 +14,84 @@
   }
 }(this, function () {
 
-  /**
-   * Chartist.js plugin to insert vertical line in a line chart.
-   *
-   */
-  /* global Chartist */
-  (function (window, document, Chartist) {
-    'use strict';
+/**
+ * Chartist.js plugin to insert vertical line in a line chart.
+ *
+ */
+/* global Chartist */
+(function (window, document, Chartist) {
+  'use strict';
 
-    var defaultOptions = {
-      position: undefined,
-      label: undefined,
-      className: 'vertical-line'
+  var defaultOptions = {
+    position: undefined,
+    label: undefined,
+    className: 'vertical-line'
+  };
+
+  var VerticalLine = function (chart, chartRect, options) {
+
+    var labelClassName = options.className + '-label';
+
+    var $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
+        .appendTo(chart.container);
+
+    this.show = function (l, r) {
+
+      $label
+        .html(options.label || '')
+        .css({ left: l + (r - l)/2 - $label.width()/2 })
+        .show();
+
+      chart.svg.elem('line', {
+        x1: l,
+        x2: l,
+        y1: chartRect.y1,
+        y2: chartRect.y2 + $label.height()
+      }, options.className);
+
+      chart.svg.elem('line', {
+        x1: r,
+        x2: r,
+        y1: chartRect.y1,
+        y2: chartRect.y2 + $label.height()
+      }, options.className);
+
     };
+  };
 
-    var VerticalLine = function (chart, chartRect, options) {
+  Chartist.plugins = Chartist.plugins || {};
+  Chartist.plugins.verticalLine = function (options) {
 
-      var labelClassName = options.className + '-label';
-      var $label = $('.' + labelClassName);
+    options = Chartist.extend({}, defaultOptions, options);
 
-      if (!$label.length) {
-        $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
-          .appendTo(chart.container);
+    return function (chart) {
+
+      if (!(chart instanceof Chartist.Line)) {
+        return;
       }
 
-      $('.' + labelClassName).hide();
+      var position = {};
 
-      this.show = function (x) {
-
-        $label
-          .html(options.label || '')
-          .css({ left: x - $label.width() / 2 })
-          .show();
-
-        chart.svg.elem('line', {
-          x1: x,
-          x2: x,
-          y1: chartRect.y1,
-          y2: chartRect.y2 + $label.height()
-        }, options.className);
-      };
-    };
-
-    Chartist.plugins = Chartist.plugins || {};
-    Chartist.plugins.verticalLine = function (options) {
-
-      options = Chartist.extend({}, defaultOptions, options);
-
-      return function (chart) {
-
-        if (!(chart instanceof Chartist.Line)) {
-          return;
+      chart.on('draw', function (data) {
+        if (data.type === 'point') {
+          if (data.index === options.line_positions[0]) {
+            position.left = data.x;
+          } else if (data.index === options.line_positions[1]) {
+            position.right = data.x;
+          }
         }
+      });
 
-        var position = {};
+      chart.on('created', function (data) {
+        var verticalLine = new VerticalLine(chart, data.chartRect, options);
+        verticalLine.show(position.left, position.right);
+      });
 
-        chart.on('data', function () {
-          position.index = chart.data.labels.indexOf(options.position);
-        });
-
-        chart.on('draw', function (data) {
-          if (position.index !== -1 && data.type === 'point' && data.index === position.index) {
-            position.x = data.x;
-          }
-        });
-
-        chart.on('created', function (data) {
-
-          if (position.index === -1) {
-            return;
-          }
-
-          var verticalLine = new VerticalLine(chart, data.chartRect, options);
-          verticalLine.show(position.x);
-        });
-      };
     };
+  };
 
-  }(window, document, Chartist));
+}(window, document, Chartist));
 
-  return Chartist.plugins.verticalLine;
+return Chartist.plugins.verticalLine;
 
 }));

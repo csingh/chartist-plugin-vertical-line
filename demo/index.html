@@ -19,7 +19,7 @@
   
   <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../bower_components/chartist/dist/chartist.js"></script>
-  <script type="text/javascript" src="../dist/chartist-plugin-vertical-line.min.js"></script>
+  <script type="text/javascript" src="../dist/chartist-plugin-vertical-line.js"></script>
 
   <script type="text/javascript">
     new Chartist.Line('.ct-chart', {
@@ -32,8 +32,18 @@
     }, {
       plugins: [
         Chartist.plugins.verticalLine({
-          position: 'Tuesday'
+          line_positions: [0,1],
+          label: "Baseline",
+        }),
+        Chartist.plugins.verticalLine({
+          line_positions: [1,2],
+          label: "Maintenance 1",
+        }),
+        Chartist.plugins.verticalLine({
+          line_positions: [2,4],
+          label: "Maintenance 2",
         })
+
       ]
     });
   </script>

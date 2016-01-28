@@ -15,28 +15,31 @@
   var VerticalLine = function (chart, chartRect, options) {
 
     var labelClassName = options.className + '-label';
-    var $label = $('.' + labelClassName);
 
-    if (!$label.length) {
-      $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
+    var $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
         .appendTo(chart.container);
-    }
 
-    $('.' + labelClassName).hide();
-
-    this.show = function (x) {
+    this.show = function (l, r) {
 
       $label
         .html(options.label || '')
-        .css({ left: x - $label.width() / 2 })
+        .css({ left: l + (r - l)/2 - $label.width()/2 })
         .show();
 
       chart.svg.elem('line', {
-        x1: x,
-        x2: x,
+        x1: l,
+        x2: l,
         y1: chartRect.y1,
         y2: chartRect.y2 + $label.height()
       }, options.className);
+
+      chart.svg.elem('line', {
+        x1: r,
+        x2: r,
+        y1: chartRect.y1,
+        y2: chartRect.y2 + $label.height()
+      }, options.className);
+
     };
   };
 
@@ -53,25 +56,21 @@
 
       var position = {};
 
-      chart.on('data', function () {
-        position.index = chart.data.labels.indexOf(options.position);
-      });
-
       chart.on('draw', function (data) {
-        if (position.index !== -1 && data.type === 'point' && data.index === position.index) {
-          position.x = data.x;
+        if (data.type === 'point') {
+          if (data.index === options.line_positions[0]) {
+            position.left = data.x;
+          } else if (data.index === options.line_positions[1]) {
+            position.right = data.x;
+          }
         }
       });
 
       chart.on('created', function (data) {
-
-        if (position.index === -1) {
-          return;
-        }
-
         var verticalLine = new VerticalLine(chart, data.chartRect, options);
-        verticalLine.show(position.x);
+        verticalLine.show(position.left, position.right);
       });
+
     };
   };
 
