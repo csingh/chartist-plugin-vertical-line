@@ -20,6 +20,7 @@ var defaultOptions = {
 
 ## Sample usage in Chartist.js
 
+This will draw vertical lines at the first point (index:0) and the second point (index:1) on the graph, and put a label between them.
 (Note: Check out demo/index.html for a full example)
 
 ```javascript
