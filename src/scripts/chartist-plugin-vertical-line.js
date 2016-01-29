@@ -24,10 +24,6 @@
       var l = pos.left[0] + (pos.left[1] - pos.left[0])/2;
       var r = pos.right[0] + (pos.right[1] - pos.right[0])/2; 
 
-      console.log('pos:', pos);
-      console.log('l:', l);
-      console.log('r:', r);
-
       $label
         .html(options.label || '')
         .css({ left: l + (r - l)/2 - $label.width()/2 })
@@ -81,9 +77,6 @@
           }
         }
       });
-
-      console.log('position:', position);
-      console.log('options:', options);
 
       chart.on('created', function (data) {
         var verticalLine = new VerticalLine(chart, data.chartRect, options);
