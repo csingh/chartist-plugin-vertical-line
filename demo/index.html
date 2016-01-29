@@ -32,18 +32,15 @@
     }, {
       plugins: [
         Chartist.plugins.verticalLine({
-          line_positions: [0,1],
-          label: "Baseline",
+          left: [0,0],
+          right: [1,2],
+          label: "Baseline"
         }),
         Chartist.plugins.verticalLine({
-          line_positions: [1,2],
-          label: "Maintenance 1",
+          left: [1,2],
+          right: [3,4],
+          label: "Baseline"
         }),
-        Chartist.plugins.verticalLine({
-          line_positions: [2,4],
-          label: "Maintenance 2",
-        })
-
       ]
     });
   </script>

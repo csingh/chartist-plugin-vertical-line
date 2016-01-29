@@ -35,7 +35,14 @@
     var $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
         .appendTo(chart.container);
 
-    this.show = function (l, r) {
+    this.show = function (pos) {
+
+      var l = pos.left[0] + (pos.left[1] - pos.left[0])/2;
+      var r = pos.right[0] + (pos.right[1] - pos.right[0])/2; 
+
+      console.log('pos:', pos);
+      console.log('l:', l);
+      console.log('r:', r);
 
       $label
         .html(options.label || '')
@@ -71,20 +78,32 @@
       }
 
       var position = {};
+      position.left = [0,0];
+      position.right = [0,0];
 
       chart.on('draw', function (data) {
         if (data.type === 'point') {
-          if (data.index === options.line_positions[0]) {
-            position.left = data.x;
-          } else if (data.index === options.line_positions[1]) {
-            position.right = data.x;
+          if (data.index === options.left[0]) {
+            position.left[0] = data.x;
+          } 
+          if (data.index === options.left[1]) {
+            position.left[1] = data.x;
+          } 
+          if (data.index === options.right[0]) {
+            position.right[0] = data.x;
+          } 
+          if (data.index === options.right[1]) {
+            position.right[1] = data.x;
           }
         }
       });
 
+      console.log('position:', position);
+      console.log('options:', options);
+
       chart.on('created', function (data) {
         var verticalLine = new VerticalLine(chart, data.chartRect, options);
-        verticalLine.show(position.left, position.right);
+        verticalLine.show(position);
       });
 
     };
