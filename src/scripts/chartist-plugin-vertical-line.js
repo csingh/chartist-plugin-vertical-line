@@ -26,21 +26,21 @@
 
       $label
         .html(options.label || '')
-        .css({ left: l + (r - l)/2 - $label.width()/2 })
+        .css({ top: '-10px', left: l + (r - l)/2 - $label.width()/2 })
         .show();
 
       chart.svg.elem('line', {
         x1: l,
         x2: l,
         y1: chartRect.y1,
-        y2: chartRect.y2 + $label.height()
+        y2: chartRect.y2
       }, options.className);
 
       chart.svg.elem('line', {
         x1: r,
         x2: r,
         y1: chartRect.y1,
-        y2: chartRect.y2 + $label.height()
+        y2: chartRect.y2
       }, options.className);
 
     };
