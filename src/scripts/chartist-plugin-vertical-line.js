@@ -16,6 +16,9 @@
 
     var labelClassName = options.className + '-label';
 
+    // delete old labels
+    $('.' + labelClassName).remove();
+
     var $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
         .appendTo(chart.container);
 
