@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zubenkoivan/chartist-plugin-vertical-line.svg?branch=master)](https://travis-ci.org/zubenkoivan/chartist-plugin-vertical-line)
 
-This is a simple plugin for Chartist.js that will allow you to draw lines around 2 vertical lines around a graph segment, and label it.
+This is a simple plugin for Chartist.js that will allow you to draw 2 vertical lines around a graph segment, and label it.
 
 Note: This is just a modified version of [chartist-plugin-vertical-line](https://github.com/zubenkoivan/chartist-plugin-vertical-line), so thanks to @[zubenkoivan](https://github.com/zubenkoivan) for the original code!
 
